@@ -1,0 +1,8 @@
+.vscode
+main.cpp
+run.sh
+test
+
+*.jpg
+*.png
+*.mp4
