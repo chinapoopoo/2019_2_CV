@@ -1,42 +1,30 @@
-#include <opencv2/opencv.hpp>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 
 using namespace std;
 using namespace cv;
 
-int main()
-{
-    Mat frame_faster;
-    Mat frame_slower;
+int main() {
+	VideoCapture cap_f("background.mp4");
+	VideoCapture cap_s("background.mp4");
+	Mat faster, slower;
 
-    VideoCapture cap_faster;
-    VideoCapture cap_slower;
+	double fps = cap_f.get(CAP_PROP_FPS);
+	double delay = 1000 / fps;
+	int count = 0;
 
-    cap_faster.open("background.mp4");
-    cap_slower.open("background.mp4");
+	while (1) {
+		cap_f >> faster;
+		if (count % 2 == 0)
+			cap_s >> slower;
 
-    while (1)
-    {
-        cap_faster >> frame_faster;
-        if (frame_faster.empty())
-        {
-            cout << "end of video" << endl;
-            break;
-        }
-        imshow("faster", frame_faster);
-        waitKey(15);
-    }
+		if (faster.empty() || slower.empty())
+			break;
 
-    while (1)
-    {
-        cap_slower >> frame_slower;
-        if (frame_slower.empty())
-        {
-            cout << "end of video" << endl;
-            break;
-        }
-        imshow("slower", frame_slower);
-        waitKey(66);
-    }
-    return 0;
+		imshow("faster", faster);
+		imshow("slower", slower);
+		waitKey(delay);
+
+		count++;
+	}
 }
